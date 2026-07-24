@@ -134,16 +134,21 @@ function App() {
                       whileInView={anim.whileInView}
                       viewport={{ once: false, margin: "-50px" }}
                       transition={{ duration: 0.6, ease: "easeOut" }}
-                      className="text-center w-full"
+                      className="w-full flex justify-start"
                     >
-                      <h2 className="text-2xl md:text-3xl font-medium text-pink-50 leading-relaxed drop-shadow-xl" style={{ textShadow: '0 4px 20px rgba(236, 72, 153, 0.4)' }}>
-                        {text.split('\n').map((line, i) => (
-                          <span key={i}>
-                            {line}
-                            <br/>
-                          </span>
-                        ))}
-                      </h2>
+                      <div className="bg-slate-800/70 backdrop-blur-xl border border-white/10 p-6 md:p-8 rounded-[2rem] rounded-tl-sm shadow-2xl max-w-[90%] text-left">
+                        <h2 className="text-xl md:text-2xl font-medium text-white leading-relaxed">
+                          {text.split('\n').map((line, i) => (
+                            <span key={i}>
+                              {line}
+                              <br/>
+                            </span>
+                          ))}
+                        </h2>
+                        <div className="text-xs text-white/50 text-right mt-3 font-mono tracking-wider">
+                          {time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </div>
+                      </div>
                     </motion.div>
                     
                     {/* Scroll Indicator (Only on first screen) */}
