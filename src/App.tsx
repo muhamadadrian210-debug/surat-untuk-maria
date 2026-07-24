@@ -110,7 +110,7 @@ function App() {
             key="message"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex-1 w-full bg-[#0a0f1d] flex flex-col relative"
+            className="absolute inset-0 bg-[#0a0f1d] z-10"
           >
             {/* Header */}
             <div className="px-6 py-4 pt-12 border-b border-white/10 flex items-center gap-3 bg-slate-900/80 backdrop-blur-md absolute top-0 w-full z-20 shadow-md">
@@ -122,18 +122,18 @@ function App() {
             </div>
             
             {/* Scrollable Story Container */}
-            <div className="flex-1 w-full overflow-y-auto scroll-smooth snap-y snap-mandatory scrollbar-hide pt-20 flex flex-col" style={{ height: '100%' }}>
+            <div className="h-full w-full overflow-y-auto scroll-smooth snap-y snap-mandatory scrollbar-hide">
               {sentences.map((text, index) => {
                 const anim = animations[index % animations.length];
                 
                 return (
-                  <div key={index} className="h-full shrink-0 w-full snap-start snap-always flex flex-col items-center justify-center p-8 relative min-h-[500px]">
+                  <div key={index} className="h-full w-full shrink-0 snap-start snap-always flex flex-col items-center justify-center p-8 pt-24 relative">
                     <motion.div 
                       initial={anim.initial}
                       whileInView={anim.whileInView}
-                      viewport={{ once: false, amount: 0.3 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                      className="text-center"
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      className="text-center w-full"
                     >
                       <h2 className="text-2xl md:text-3xl font-medium text-pink-50 leading-relaxed drop-shadow-xl" style={{ textShadow: '0 4px 20px rgba(236, 72, 153, 0.4)' }}>
                         {text.split('\n').map((line, i) => (
