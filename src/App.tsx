@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, Heart, Battery, Wifi, ChevronDown } from 'lucide-react';
 
 const sentences = [
-  "Halo sayangku, Maria Yuniati Thersiana Adoe.",
+  "Halo sayangku, Mia.",
   "Aku cuma mau bilang... terima kasih banyak.",
   "Terima kasih karena sudah menjadi wanita yang sangat baik buat aku.",
   "Terima kasih mau nerima aku apa adanya, dengan segala kurang dan lebihku.",
