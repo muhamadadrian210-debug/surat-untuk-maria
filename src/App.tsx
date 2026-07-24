@@ -110,7 +110,8 @@ function App() {
             key="message"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="absolute inset-0 bg-[#0a0f1d] z-10"
+            className="absolute inset-0 z-10 bg-cover bg-center"
+            style={{ backgroundImage: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.6), rgba(88, 28, 135, 0.8)), url("https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?q=80&w=800&auto=format&fit=crop")' }}
           >
             {/* Header */}
             <div className="px-6 py-4 pt-12 border-b border-white/10 flex items-center gap-3 bg-slate-900/80 backdrop-blur-md absolute top-0 w-full z-20 shadow-md">
