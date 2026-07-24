@@ -4,7 +4,7 @@ import { Lock, Mail, Heart, Battery, Wifi, Send } from 'lucide-react';
 
 type Sender = 'ocean' | 'mia';
 type Message = { id: string; sender: Sender; text: string; time: Date };
-type Option = { id: string; text: string; nextNode: string };
+type Option = { id: string; text: string; nextNode: string; affectionChange?: number };
 type StoryNode = {
   id: string;
   oceanText: string[];
@@ -16,22 +16,22 @@ const storyNodes: Record<string, StoryNode> = {
     id: 'start',
     oceanText: ["Halo sayangku, Mia."],
     options: [
-      { id: 'opt1', text: "Iyaaa bey ❤️", nextNode: 'node_thanks' },
-      { id: 'opt2', text: "Apasih tumben 😒", nextNode: 'node_tsundere_1' }
+      { id: 'opt1', text: "Iyaaa bey ❤️", nextNode: 'node_thanks', affectionChange: 15 },
+      { id: 'opt2', text: "Apasih tumben 😒", nextNode: 'node_tsundere_1', affectionChange: -10 }
     ]
   },
   node_tsundere_1: {
     id: 'node_tsundere_1',
     oceanText: ["Dih jutek amat ayangku wkwk.", "Aku serius nih, cuma mau bilang... terima kasih banyak."],
     options: [
-      { id: 'opt3', text: "Terima kasih buat apa? 🤔", nextNode: 'node_good' }
+      { id: 'opt3', text: "Terima kasih buat apa? 🤔", nextNode: 'node_good', affectionChange: 5 }
     ]
   },
   node_thanks: {
     id: 'node_thanks',
     oceanText: ["Aku cuma mau bilang... terima kasih banyak."],
     options: [
-      { id: 'opt4', text: "Terima kasih buat apa sayang? 🤔", nextNode: 'node_good' }
+      { id: 'opt4', text: "Terima kasih buat apa sayang? 🤔", nextNode: 'node_good', affectionChange: 10 }
     ]
   },
   node_good: {
@@ -41,8 +41,8 @@ const storyNodes: Record<string, StoryNode> = {
       "Terima kasih mau nerima aku apa adanya, dengan segala kurang dan lebihku."
     ],
     options: [
-      { id: 'opt5', text: "Aaaa kamu juga baik banget 🥺", nextNode: 'node_support' },
-      { id: 'opt6', text: "Tumben sadar kalau banyak kurangnya? Wkwk 😜", nextNode: 'node_tsundere_2' }
+      { id: 'opt5', text: "Aaaa kamu juga baik banget 🥺", nextNode: 'node_support', affectionChange: 20 },
+      { id: 'opt6', text: "Tumben sadar kalau banyak kurangnya? Wkwk 😜", nextNode: 'node_tsundere_2', affectionChange: -5 }
     ]
   },
   node_tsundere_2: {
@@ -53,7 +53,7 @@ const storyNodes: Record<string, StoryNode> = {
       "Dan terima kasih udah mencintai aku dengan sangat tulus."
     ],
     options: [
-      { id: 'opt7', text: "Iya bey, aku bakal selalu dukung kamu ❤️", nextNode: 'node_special' }
+      { id: 'opt7', text: "Iya bey, aku bakal selalu dukung kamu ❤️", nextNode: 'node_special', affectionChange: 25 }
     ]
   },
   node_support: {
@@ -63,7 +63,7 @@ const storyNodes: Record<string, StoryNode> = {
       "Dan terima kasih udah mencintai aku dengan sangat tulus."
     ],
     options: [
-      { id: 'opt8', text: "Iya sayang, always ❤️", nextNode: 'node_special' }
+      { id: 'opt8', text: "Iya sayang, always ❤️", nextNode: 'node_special', affectionChange: 25 }
     ]
   },
   node_special: {
@@ -73,8 +73,8 @@ const storyNodes: Record<string, StoryNode> = {
       "Kamu itu spesial, dan aku beruntung banget punya kamu."
     ],
     options: [
-      { id: 'opt9', text: "I love you too bey 🥺❤️", nextNode: 'node_end' },
-      { id: 'opt10', text: "Ah masa sih? Gombal! 🫣", nextNode: 'node_end_tsundere' }
+      { id: 'opt9', text: "I love you too bey 🥺❤️", nextNode: 'node_end', affectionChange: 30 },
+      { id: 'opt10', text: "Ah masa sih? Gombal! 🫣", nextNode: 'node_end_tsundere', affectionChange: 5 }
     ]
   },
   node_end_tsundere: {
@@ -102,6 +102,8 @@ function App() {
   const [isOceanTyping, setIsOceanTyping] = useState(false);
   const [activeOptions, setActiveOptions] = useState<Option[]>([]);
   const [showHeart, setShowHeart] = useState(false);
+  const [affection, setAffection] = useState(50); // Start at 50%
+  const [floatingHearts, setFloatingHearts] = useState<{id:string, points:number}[]>([]);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -170,6 +172,12 @@ function App() {
   }, [currentNodeId, screen]);
 
   const handleOptionClick = (option: Option) => {
+    // Update affection
+    if (option.affectionChange) {
+      setAffection(prev => Math.min(100, Math.max(0, prev + (option.affectionChange || 0))));
+      setFloatingHearts(prev => [...prev, { id: Math.random().toString(), points: option.affectionChange || 0 }]);
+    }
+    
     // Add Mia's choice as a message
     setMessages(prev => [...prev, { id: Math.random().toString(), sender: 'mia', text: option.text, time: new Date() }]);
     // Move to next node
@@ -256,12 +264,47 @@ function App() {
             className="absolute inset-0 z-10 bg-cover bg-center flex flex-col"
             style={{ backgroundImage: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(88, 28, 135, 0.9)), url("https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?q=80&w=800&auto=format&fit=crop")' }}
           >
-            {/* Header */}
-            <div className="px-6 py-4 pt-12 border-b border-white/10 flex items-center gap-3 bg-slate-900/50 backdrop-blur-md w-full z-20 shadow-md shrink-0">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold text-lg shadow-lg">O</div>
-              <div>
-                <h2 className="text-white font-semibold leading-tight">Ocean 🌊</h2>
-                <span className="text-blue-300/80 text-xs">{isOceanTyping ? 'Mengetik pesan...' : 'Online'}</span>
+            {/* Header with Baper Meter */}
+            <div className="px-6 py-3 pt-10 border-b border-white/10 flex flex-col gap-2 bg-slate-900/50 backdrop-blur-md w-full z-20 shadow-md shrink-0">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold text-lg shadow-lg relative">
+                    O
+                    {/* Floating affection points */}
+                    <AnimatePresence>
+                      {floatingHearts.map(fh => (
+                        <motion.div
+                          key={fh.id}
+                          initial={{ opacity: 1, y: 0, scale: 0.5 }}
+                          animate={{ opacity: 0, y: -40, scale: 1.2 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 1 }}
+                          className={`absolute -top-4 font-bold text-sm ${fh.points > 0 ? 'text-green-400' : 'text-red-400'} drop-shadow-md`}
+                          onAnimationComplete={() => setFloatingHearts(prev => prev.filter(p => p.id !== fh.id))}
+                        >
+                          {fh.points > 0 ? '+' : ''}{fh.points}
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                  <div>
+                    <h2 className="text-white font-semibold leading-tight">Ocean 🌊</h2>
+                    <span className="text-blue-300/80 text-xs">{isOceanTyping ? 'Mengetik pesan...' : 'Online'}</span>
+                  </div>
+                </div>
+                
+                {/* Baper Meter */}
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] text-pink-300 font-bold uppercase tracking-wider">Baper Meter</span>
+                  <div className="w-24 h-2 bg-slate-800 rounded-full overflow-hidden border border-white/10">
+                    <motion.div 
+                      className="h-full bg-gradient-to-r from-pink-500 to-rose-400"
+                      initial={{ width: '50%' }}
+                      animate={{ width: `${affection}%` }}
+                      transition={{ type: 'spring', bounce: 0.3 }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             
