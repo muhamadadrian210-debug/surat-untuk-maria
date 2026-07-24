@@ -122,17 +122,17 @@ function App() {
             </div>
             
             {/* Scrollable Story Container */}
-            <div className="flex-1 overflow-y-auto scroll-smooth snap-y snap-mandatory scrollbar-hide pt-20">
+            <div className="flex-1 w-full overflow-y-auto scroll-smooth snap-y snap-mandatory scrollbar-hide pt-20 flex flex-col" style={{ height: '100%' }}>
               {sentences.map((text, index) => {
                 const anim = animations[index % animations.length];
                 
                 return (
-                  <div key={index} className="h-full min-h-full w-full snap-start snap-always flex flex-col items-center justify-center p-8 relative">
+                  <div key={index} className="h-full shrink-0 w-full snap-start snap-always flex flex-col items-center justify-center p-8 relative min-h-[500px]">
                     <motion.div 
                       initial={anim.initial}
                       whileInView={anim.whileInView}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      viewport={{ once: false, amount: 0.3 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
                       className="text-center"
                     >
                       <h2 className="text-2xl md:text-3xl font-medium text-pink-50 leading-relaxed drop-shadow-xl" style={{ textShadow: '0 4px 20px rgba(236, 72, 153, 0.4)' }}>
@@ -150,7 +150,7 @@ function App() {
                       <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 2 }}
+                        transition={{ delay: 0.5 }}
                         className="absolute bottom-12 flex flex-col items-center text-pink-300/60"
                       >
                         <span className="text-xs tracking-widest uppercase mb-2">Scroll ke bawah</span>
